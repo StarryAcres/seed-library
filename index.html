@@ -606,6 +606,19 @@ async function submitSwap() {
   const btn = document.querySelector('#swap-modal .btn-primary');
   btn.textContent = 'Sending…'; btn.disabled = true;
   try {
+    // Save to Supabase
+    await sb('swap_requests', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({
+        seed_name: req.seedName, seed_id: req.seedId,
+        name: req.name, email: req.email,
+        location: req.location, offer: req.offer,
+        message: req.message, status: 'pending'
+      })
+    });
+  } catch(e) { console.warn('Could not save swap request to DB:', e); }
+  try {
+    // Send email notification
     await fetch('https://formspree.io/f/mgoljrdb', {
       method: 'POST',
       headers: {'Content-Type':'application/json','Accept':'application/json'},
@@ -623,8 +636,34 @@ async function submitSwap() {
   showToast('🌿 Swap request sent! Starry Acres has been notified by email.');
 }
 
-function acceptReq(i) { const r=swapRequests[i]; swapRequests.splice(i,1); renderRequests(); showToast('✅ Accepted swap with '+r.name); }
-function declineReq(i) { swapRequests.splice(i,1); renderRequests(); showToast('Swap request removed.'); }
+async function loadSwapRequests() {
+  try {
+    const rows = await sb('swap_requests?status=eq.pending&select=*&order=created_at.asc');
+    swapRequests = rows.map(r => ({
+      db_id: r.id, seedName: r.seed_name, seedId: r.seed_id,
+      name: r.name, email: r.email, location: r.location||'',
+      offer: r.offer||'', message: r.message||''
+    }));
+  } catch(e) { console.warn('Could not load swap requests:', e); }
+}
+
+async function acceptReq(i) {
+  const r = swapRequests[i];
+  try {
+    if (r.db_id) await sb('swap_requests?id=eq.'+r.db_id, {method:'PATCH', prefer:'return=minimal', body:JSON.stringify({status:'accepted'})});
+  } catch(e) {}
+  swapRequests.splice(i, 1); renderRequests();
+  showToast('✅ Accepted swap with ' + r.name);
+}
+
+async function declineReq(i) {
+  const r = swapRequests[i];
+  try {
+    if (r.db_id) await sb('swap_requests?id=eq.'+r.db_id, {method:'PATCH', prefer:'return=minimal', body:JSON.stringify({status:'declined'})});
+  } catch(e) {}
+  swapRequests.splice(i, 1); renderRequests();
+  showToast('Swap request declined.');
+}
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 async function memberLogin() {
@@ -998,7 +1037,7 @@ function showToast(msg) {
 }
 
 document.getElementById('swap-modal').addEventListener('click', function(e){if(e.target===this)closeModal();});
-(async()=>{ await loadDBSeeds(); renderAll(); })();
+(async()=>{ await loadDBSeeds(); await loadSwapRequests(); renderAll(); })();
 </script>
 </body>
 </html>
