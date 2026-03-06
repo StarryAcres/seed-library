@@ -196,8 +196,18 @@ footer a:hover{color:var(--straw);}
 
   <div id="tab-requests" class="hidden">
     <div class="section-header"><h2>Swap Requests</h2><span class="count-pill" id="requests-count">0</span></div>
-    <p style="font-size:0.88rem;color:var(--faded);margin-bottom:1.2rem;">Requests submitted by community members. Each one also emails Starry Acres directly.</p>
-    <div class="requests-list" id="requests-list"><p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No swap requests yet. Browse the collection and click "Request Swap" to get started!</p></div>
+    <div id="requests-admin-gate">
+      <div style="background:white;border:1.5px solid #e8dfc8;border-radius:12px;padding:2rem;max-width:420px;text-align:center;">
+        <p style="font-size:2rem;margin-bottom:0.75rem;">🔒</p>
+        <p style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--bark);margin-bottom:0.5rem;">Admin Access Required</p>
+        <p style="font-size:0.84rem;color:var(--faded);margin-bottom:1.2rem;">Swap requests contain personal contact details and are only visible to Starry Acres administrators.</p>
+        <button class="btn-primary" onclick="openAdminModal()" style="padding:0.7rem 1.5rem;width:auto;flex:none;">⚙️ Log In as Admin</button>
+      </div>
+    </div>
+    <div id="requests-content" class="hidden">
+      <p style="font-size:0.88rem;color:var(--faded);margin-bottom:1.2rem;">Pending swap requests from community members. Each one also emails Starry Acres directly.</p>
+      <div class="requests-list" id="requests-list"><p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No pending swap requests.</p></div>
+    </div>
   </div>
 
   <div id="tab-community" class="hidden">
@@ -527,10 +537,14 @@ function toggleUnavail(id) {
 }
 
 function renderRequests() {
+  const isAdmin = currentUser?.type === 'admin';
+  document.getElementById('requests-admin-gate').classList.toggle('hidden', isAdmin);
+  document.getElementById('requests-content').classList.toggle('hidden', !isAdmin);
+  document.getElementById('requests-count').textContent = isAdmin ? swapRequests.length : '🔒';
+  if (!isAdmin) return;
   const list = document.getElementById('requests-list');
-  document.getElementById('requests-count').textContent = swapRequests.length;
   if (!swapRequests.length) {
-    list.innerHTML = '<p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No swap requests yet. Browse the collection and click "Request Swap" to get started!</p>';
+    list.innerHTML = '<p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No pending swap requests.</p>';
     return;
   }
   list.innerHTML = swapRequests.map((r,i) => `
@@ -1010,6 +1024,7 @@ async function adminModalLogin() {
     btn.style.display = 'none';
     document.getElementById('admin-modal-success').style.display = 'block';
     filterSeeds();
+    renderRequests(); // show requests tab content if admin is now logged in
     showToast('⚙️ Logged in as ' + adminName + ' — 🚫 / ↩️ buttons now visible.');
   } catch(e) {
     errEl.textContent = '❌ Login failed — check your connection.'; errEl.style.display = 'block';
@@ -1023,7 +1038,8 @@ function adminModalLogout() {
   ['add-member-panel','add-admin-panel'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('add-login-gate').classList.remove('hidden');
   closeAdminModal();
-  filterSeeds(); // hide admin buttons
+  filterSeeds();
+  renderRequests(); // re-show the gate on logout
   showToast('Logged out of admin mode.');
 }
 
