@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starry Acres Seed Library — Eastern Perth Hills</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--soil:#3b2a1a;--bark:#6b4c2a;--moss:#5a7a3a;--sage:#8aaa6a;--straw:#e8d9b0;--cream:#faf6ed;--petal:#c9784a;--leaf:#3d6b2a;--faded:#b8a880;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--soil);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+header{background:var(--soil);color:var(--cream);padding:0;position:relative;overflow:hidden;}
+.header-leaves{position:absolute;right:0;top:0;bottom:0;width:340px;opacity:0.12;pointer-events:none;}
+.header-inner{max-width:1100px;margin:0 auto;padding:2rem 2rem 1.5rem;display:flex;align-items:center;gap:1.5rem;position:relative;z-index:1;}
+.org-badge{background:var(--petal);color:white;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.3rem 0.75rem;border-radius:2px;display:inline-block;margin-bottom:0.5rem;}
+header h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);line-height:1.1;color:var(--straw);}
+header h1 em{font-style:italic;color:var(--sage);}
+.header-sub{font-size:0.83rem;color:var(--faded);margin-top:0.3rem;}
+.header-social{display:flex;gap:0.75rem;margin-top:0.6rem;flex-wrap:wrap;}
+.header-social a{color:var(--faded);font-size:0.75rem;text-decoration:none;transition:color 0.2s;}
+.header-social a:hover{color:var(--straw);}
+.info-bar{background:var(--moss);color:white;padding:0.55rem 2rem;font-size:0.78rem;display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;letter-spacing:0.04em;}
+.info-bar span::before{content:'🌱 ';}
+.disclaimer-bar{background:#fef3e2;border-top:2px solid #e8a830;border-bottom:2px solid #e8a830;color:#7a4f10;text-align:center;padding:0.6rem 1.5rem;font-size:0.8rem;font-weight:700;}
+.tab-bar{background:var(--bark);display:flex;max-width:100%;overflow-x:auto;}
+.tab-bar button{background:none;border:none;color:var(--faded);font-family:'Lato',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.85rem 1.3rem;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.2s;}
+.tab-bar button:hover{color:var(--straw);}
+.tab-bar button.active{color:var(--straw);border-bottom-color:var(--sage);background:rgba(255,255,255,0.06);}
+.container{max-width:1100px;margin:0 auto;padding:2rem;position:relative;z-index:1;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.section-header h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--bark);}
+.count-pill{background:var(--moss);color:white;font-size:0.7rem;font-weight:700;padding:0.25rem 0.6rem;border-radius:99px;}
+.controls{display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-wrap input{width:100%;padding:0.6rem 0.9rem 0.6rem 2.4rem;border:1.5px solid var(--faded);border-radius:6px;background:white;font-family:'Lato',sans-serif;font-size:0.9rem;color:var(--soil);outline:none;transition:border-color 0.2s;}
+.search-wrap input:focus{border-color:var(--moss);}
+.search-wrap svg{position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--faded);}
+.filter-btn{padding:0.55rem 1rem;border:1.5px solid var(--faded);border-radius:6px;background:white;font-family:'Lato',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;color:var(--bark);transition:all 0.2s;white-space:nowrap;}
+.filter-btn:hover,.filter-btn.active{background:var(--moss);border-color:var(--moss);color:white;}
+.seed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1rem;}
+.seed-card{border-radius:10px;padding:1.1rem 1.2rem;border:1.5px solid #e8dfc8;position:relative;transition:transform 0.15s,box-shadow 0.15s;animation:fadeUp 0.35s ease both;}
+.seed-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,42,26,0.1);}
+.seed-card.unavailable{opacity:0.5;filter:grayscale(0.4);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.seed-category{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--moss);margin-bottom:0.3rem;}
+.seed-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--soil);line-height:1.3;margin-bottom:0.2rem;}
+.seed-latin{font-family:'Playfair Display',serif;font-style:italic;font-size:0.78rem;color:var(--faded);margin-bottom:0.6rem;}
+.seed-meta{display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;}
+.seed-date{font-size:0.72rem;color:var(--faded);}
+.status-badge{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:4px;}
+.status-have{background:#e8f3df;color:var(--leaf);}
+.status-seeking{background:#fef0e6;color:var(--petal);}
+.status-growing{background:#e6f0f5;color:#4a7a8a;}
+.status-unavailable{background:#f0f0f0;color:#888;}
+.card-actions{display:flex;gap:0.5rem;margin-top:0.75rem;}
+.swap-btn{flex:1;padding:0.5rem;background:var(--soil);color:var(--straw);border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+.swap-btn:hover{background:var(--bark);}
+.unavail-btn{padding:0.5rem 0.65rem;background:none;border:1.5px solid #e0d0c0;border-radius:6px;cursor:pointer;font-size:0.9rem;transition:all 0.15s;}
+.unavail-btn:hover{background:#fde8e8;border-color:#c06060;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(59,42,26,0.55);z-index:100;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--cream);border-radius:14px;padding:2rem;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;max-height:90vh;overflow-y:auto;}
+.modal h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.3rem;color:var(--soil);}
+.modal .for-seed{font-style:italic;color:var(--bark);font-size:0.9rem;margin-bottom:1.2rem;}
+.modal label{display:block;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--bark);margin-bottom:0.3rem;margin-top:0.9rem;}
+.modal input,.modal textarea{width:100%;padding:0.6rem 0.8rem;border:1.5px solid #d8cebc;border-radius:6px;background:white;font-family:'Lato',sans-serif;font-size:0.9rem;color:var(--soil);outline:none;transition:border-color 0.2s;}
+.modal input:focus,.modal textarea:focus{border-color:var(--moss);}
+.modal textarea{resize:vertical;min-height:80px;}
+.modal-actions{display:flex;gap:0.75rem;margin-top:1.3rem;}
+.modal-disclaimer{background:#fef3e2;border:1.5px solid #e8a830;border-radius:6px;padding:0.6rem 0.9rem;font-size:0.78rem;color:#7a4f10;margin-top:1rem;line-height:1.5;}
+.btn-primary{flex:1;padding:0.7rem;background:var(--moss);color:white;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:background 0.2s;}
+.btn-primary:hover{background:var(--leaf);}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-cancel{padding:0.7rem 1rem;background:none;border:1.5px solid var(--faded);border-radius:6px;font-family:'Lato',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;color:var(--bark);transition:all 0.2s;}
+.btn-cancel:hover{border-color:var(--bark);}
+.close-modal{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--faded);line-height:1;}
+.panel-box{background:white;border-radius:12px;padding:1.8rem;border:1.5px solid #e8dfc8;}
+.panel-box h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--bark);margin-bottom:1.2rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-group{margin-bottom:0.9rem;}
+.form-group label{display:block;font-size:0.75rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--bark);margin-bottom:0.3rem;}
+.form-group input,.form-group select{width:100%;padding:0.6rem 0.85rem;border:1.5px solid #d8cebc;border-radius:6px;background:var(--cream);font-family:'Lato',sans-serif;font-size:0.88rem;color:var(--soil);outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--moss);}
+.community-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.grower-card{background:white;border-radius:10px;padding:1.3rem;border:1.5px solid #e8dfc8;}
+.grower-avatar{width:44px;height:44px;border-radius:50%;background:var(--moss);color:white;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;margin-bottom:0.8rem;}
+.grower-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--soil);}
+.grower-location{font-size:0.78rem;color:var(--faded);margin-bottom:0.6rem;}
+.grower-stats{font-size:0.75rem;color:var(--bark);}
+.requests-list{display:flex;flex-direction:column;gap:0.75rem;}
+.request-card{background:white;border-radius:10px;padding:1.1rem 1.3rem;border:1.5px solid #e8dfc8;display:flex;align-items:flex-start;gap:1rem;}
+.request-icon{width:40px;height:40px;flex-shrink:0;background:#fef0e6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.request-details h4{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:600;color:var(--soil);}
+.request-details p{font-size:0.8rem;color:var(--faded);margin-top:0.2rem;}
+.request-actions{margin-left:auto;display:flex;gap:0.5rem;flex-shrink:0;align-items:center;}
+.btn-sm{padding:0.35rem 0.75rem;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Lato',sans-serif;transition:all 0.15s;}
+.btn-accept{background:var(--moss);border-color:var(--moss);color:white;}
+.btn-accept:hover{background:var(--leaf);border-color:var(--leaf);}
+.btn-decline{background:white;border-color:#d8cebc;color:var(--bark);}
+.btn-decline:hover{border-color:var(--bark);}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--soil);color:var(--straw);padding:0.9rem 1.4rem;border-radius:8px;font-size:0.85rem;box-shadow:0 4px 20px rgba(0,0,0,0.25);z-index:200;transform:translateY(4rem);opacity:0;transition:all 0.3s;pointer-events:none;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.hidden{display:none !important;}
+.seed-row{background:white;border:1.5px solid #e8dfc8;border-radius:8px;padding:0.7rem 0.9rem;display:flex;align-items:center;gap:0.75rem;}
+.seed-row .info{flex:1;}
+.seed-row .info strong{font-size:0.88rem;color:var(--soil);display:block;}
+.seed-row .info span{font-size:0.75rem;color:var(--faded);}
+.del-btn{background:none;border:1.5px solid #e0d0c0;border-radius:6px;padding:0.3rem 0.5rem;cursor:pointer;font-size:0.85rem;color:var(--faded);transition:all 0.15s;flex-shrink:0;}
+.del-btn:hover{background:#fde8e8;border-color:#c06060;color:#c06060;}
+.edit-btn{padding:0.5rem 0.65rem;background:none;border:1.5px solid #c8dfc8;border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.15s;}
+.edit-btn:hover{background:#e8f3e0;border-color:var(--moss);}
+.login-box{border:1.5px solid #e8dfc8;border-radius:8px;padding:1.2rem;margin-bottom:1rem;background:var(--cream);}
+.login-box-title{font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bark);margin-bottom:0.8rem;}
+.ii{padding:0.6rem 0.8rem;border:1.5px solid #d8cebc;border-radius:6px;font-family:'Lato',sans-serif;font-size:0.88rem;background:var(--cream);outline:none;color:var(--soil);transition:border-color 0.2s;}
+.ii:focus{border-color:var(--moss);}
+footer{background:var(--soil);color:var(--faded);text-align:center;padding:2rem;font-size:0.82rem;position:relative;z-index:1;}
+footer a{color:var(--sage);text-decoration:none;}
+footer a:hover{color:var(--straw);}
+@media(max-width:700px){
+  .container{padding:1rem;}
+  .header-inner{padding:1.5rem 1rem 1rem;flex-wrap:wrap;}
+  .seed-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr !important;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="info-bar"><span>Starry Acres Seed Library</span><span>Eastern Perth Hills Community</span><span>Wundowie &amp; surrounds</span></div>
+
+<header>
+  <svg class="header-leaves" viewBox="0 0 340 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="280" cy="60" rx="80" ry="40" fill="white" transform="rotate(-30 280 60)"/>
+    <ellipse cx="320" cy="130" rx="60" ry="28" fill="white" transform="rotate(-50 320 130)"/>
+    <ellipse cx="200" cy="30" rx="50" ry="22" fill="white" transform="rotate(-15 200 30)"/>
+    <ellipse cx="260" cy="170" rx="70" ry="30" fill="white" transform="rotate(-65 260 170)"/>
+    <line x1="280" y1="20" x2="280" y2="100" stroke="white" stroke-width="1.5"/>
+    <line x1="320" y1="102" x2="320" y2="158" stroke="white" stroke-width="1.5"/>
+    <line x1="200" y1="8" x2="200" y2="52" stroke="white" stroke-width="1.5"/>
+  </svg>
+  <div class="header-inner">
+    <div>
+      <div class="org-badge">Seed Savers Network · WA</div>
+      <h1>Starry Acres <em>Seed Library</em></h1>
+      <p class="header-sub">Share seeds · Grow community · Eastern Perth Hills</p>
+      <div class="header-social">
+        <a href="https://starryacres.com.au" target="_blank">🌐 starryacres.com.au</a>
+        <a href="https://www.facebook.com/starryacres.wa" target="_blank">📘 Facebook</a>
+        <a href="https://www.instagram.com/starryacreswa" target="_blank">📷 Instagram</a>
+        <a href="https://www.tiktok.com/@starryacres" target="_blank">🎵 TikTok</a>
+        <a href="https://www.youtube.com/@StarryAcresWA" target="_blank">▶️ YouTube</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="disclaimer-bar">⚠️ Seed postage and exchange is restricted to Western Australia only, in compliance with WA biosecurity laws. We do not send seeds interstate or internationally.</div>
+
+<nav class="tab-bar">
+  <button class="active" onclick="showTab('collection',this)">🌾 Collection</button>
+  <button onclick="showTab('seeking',this)">🔍 Seeking</button>
+  <button onclick="showTab('growing',this)">🌱 Growing Next</button>
+  <button onclick="showTab('requests',this)">✉️ Swap Requests</button>
+  <button onclick="showTab('community',this)">👩‍🌾 Community</button>
+  <button onclick="showTab('add',this)">＋ Add Seeds</button>
+</nav>
+
+<div class="container">
+  <div id="tab-collection">
+    <div class="section-header"><h2>Seeds Available for Swap</h2><span class="count-pill" id="collection-count">0</span></div>
+    <div class="controls">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Search by name or latin…" oninput="filterSeeds()">
+      </div>
+      <button class="filter-btn active" onclick="filterCat('all',this)">All</button>
+      <button class="filter-btn" onclick="filterCat('Legume',this)">Legumes</button>
+      <button class="filter-btn" onclick="filterCat('Gourd',this)">Gourds</button>
+      <button class="filter-btn" onclick="filterCat('Herb',this)">Herbs</button>
+      <button class="filter-btn" onclick="filterCat('Flower',this)">Flowers</button>
+    </div>
+    <div class="seed-grid" id="collection-grid"></div>
+  </div>
+
+  <div id="tab-seeking" class="hidden">
+    <div class="section-header"><h2>Currently Sourcing</h2><span class="count-pill" id="seeking-count">0</span></div>
+    <p style="font-size:0.88rem;color:var(--faded);margin-bottom:1.2rem;">If you have any of these, please reach out — a swap would be wonderful!</p>
+    <div class="seed-grid" id="seeking-grid"></div>
+  </div>
+
+  <div id="tab-growing" class="hidden">
+    <div class="section-header"><h2>Growing Next — Autumn/Winter 2026</h2><span class="count-pill" id="growing-count">0</span></div>
+    <p style="font-size:0.88rem;color:var(--faded);margin-bottom:1.2rem;">Seeds lined up for the coming season. Surplus may become available for swap later.</p>
+    <div class="seed-grid" id="growing-grid"></div>
+  </div>
+
+  <div id="tab-requests" class="hidden">
+    <div class="section-header"><h2>Swap Requests</h2><span class="count-pill" id="requests-count">0</span></div>
+    <div id="requests-admin-gate">
+      <div style="background:white;border:1.5px solid #e8dfc8;border-radius:12px;padding:2rem;max-width:420px;text-align:center;">
+        <p style="font-size:2rem;margin-bottom:0.75rem;">🔒</p>
+        <p style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--bark);margin-bottom:0.5rem;">Admin Access Required</p>
+        <p style="font-size:0.84rem;color:var(--faded);margin-bottom:1.2rem;">Swap requests contain personal contact details and are only visible to Starry Acres administrators.</p>
+        <button class="btn-primary" onclick="openAdminModal()" style="padding:0.7rem 1.5rem;width:auto;flex:none;">⚙️ Log In as Admin</button>
+      </div>
+    </div>
+    <div id="requests-content" class="hidden">
+      <p style="font-size:0.88rem;color:var(--faded);margin-bottom:1.2rem;">Pending swap requests from community members. Each one also emails Starry Acres directly.</p>
+      <div class="requests-list" id="requests-list"><p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No pending swap requests.</p></div>
+    </div>
+  </div>
+
+  <div id="tab-community" class="hidden">
+    <div class="section-header"><h2>Community Growers</h2></div>
+    <div class="community-grid" id="community-grid"></div>
+  </div>
+
+  <div id="tab-add" class="hidden">
+    <div id="add-login-gate">
+      <div class="panel-box" style="max-width:480px;margin:0 auto;">
+        <h2>🔒 Member &amp; Admin Access</h2>
+        <p style="font-size:0.84rem;color:var(--faded);margin-bottom:1.4rem;">This area is restricted to approved Starry Acres members and administrators. Seeds are stored securely in the database — not visible in your browser's source.</p>
+        <div class="login-box">
+          <div class="login-box-title">👤 Member Login</div>
+          <div class="form-group"><label>Your Approved Email *</label><input type="email" id="login-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')memberLogin()"></div>
+          <div class="form-group"><label>Your 4-Digit PIN *</label><input type="password" id="login-pin" placeholder="••••" maxlength="4" style="letter-spacing:0.3em;" onkeydown="if(event.key==='Enter')memberLogin()"></div>
+          <button class="btn-primary" onclick="memberLogin()" style="width:100%;padding:0.65rem;">Access as Member</button>
+        </div>
+        <div class="login-box">
+          <div class="login-box-title">⚙️ Admin Login</div>
+          <div class="form-group"><label>Admin Password *</label><input type="password" id="login-password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+          <button class="btn-primary" onclick="adminLogin()" style="width:100%;padding:0.65rem;background:var(--bark);">Access as Admin</button>
+        </div>
+        <p id="login-error" style="color:#c06060;font-size:0.82rem;margin-top:0.75rem;text-align:center;display:none;"></p>
+        <p style="font-size:0.75rem;color:var(--faded);margin-top:0.75rem;text-align:center;">Not a member yet? Contact <a href="/cdn-cgi/l/email-protection#bfcccbdecdcdc6dedccddaccc8deffd8d2ded6d391dcd0d2" style="color:var(--moss);"><span class="__cf_email__" data-cfemail="a7d4d3c6d5d5dec6c4d5c2d4d0c6e7c0cac6cecb89c4c8ca">[email&#160;protected]</span></a></p>
+      </div>
+    </div>
+
+    <div id="add-member-panel" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.5rem;">
+        <div><h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--bark);">Welcome, <span id="member-name-display"></span> 🌿</h2><p style="font-size:0.82rem;color:var(--faded);">Add seeds to share with the community.</p></div>
+        <button class="btn-cancel" onclick="logout()" style="font-size:0.78rem;">Log Out</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;" class="two-col">
+        <div class="panel-box">
+          <h2>Add a Seed</h2>
+          <div class="form-row">
+            <div class="form-group"><label>Seed Name *</label><input type="text" id="add-name" placeholder="Common name"></div>
+            <div class="form-group"><label>Latin Name</label><input type="text" id="add-latin" placeholder="Botanical name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Category</label><select id="add-category"><option>Vegetable</option><option>Legume</option><option>Herb</option><option>Flower</option><option>Gourd</option><option>Fruit</option><option>Greens</option><option>Root</option><option>Other</option></select></div>
+            <div class="form-group"><label>Status</label><select id="add-status"><option value="have">✅ Available for swap</option><option value="seeking">🔍 Seeking / Sourcing</option><option value="growing">🌱 Growing next season</option></select></div>
+          </div>
+          <div class="form-group"><label>Notes (optional)</label><input type="text" id="add-notes" placeholder="Harvest date, variety notes…"></div>
+          <button class="btn-primary" onclick="memberAddSeed()" style="width:100%;padding:0.8rem;">🌱 Add to Collection</button>
+        </div>
+        <div>
+          <div class="section-header" style="margin-bottom:1rem;"><h2 style="font-size:1.2rem;">Your Added Seeds</h2><span class="count-pill" id="member-added-count">0</span></div>
+          <p style="font-size:0.82rem;color:var(--faded);margin-bottom:1rem;">Seeds you've added. Click 🗑 to remove.</p>
+          <div id="member-added-list" style="display:flex;flex-direction:column;gap:0.6rem;"><p style="color:var(--faded);font-style:italic;font-size:0.85rem;">Loading…</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="add-admin-panel" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.5rem;">
+        <div><h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--bark);">⚙️ Admin Panel — Starry Acres</h2><p style="font-size:0.82rem;color:var(--faded);">Manage members, add seeds, and oversee the collection.</p></div>
+        <button class="btn-cancel" onclick="logout()" style="font-size:0.78rem;">Log Out</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;" class="two-col">
+        <div style="display:flex;flex-direction:column;gap:1.2rem;">
+          <div class="panel-box">
+            <h2>Add a Seed</h2>
+            <div class="form-row">
+              <div class="form-group"><label>Added By</label><input type="text" id="admin-grower" value="Starry Acres Seed Library"></div>
+              <div class="form-group"><label>Location</label><input type="text" id="admin-location" value="Wundowie, Eastern Perth Hills, WA"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Seed Name *</label><input type="text" id="admin-name" placeholder="Common name"></div>
+              <div class="form-group"><label>Latin Name</label><input type="text" id="admin-latin" placeholder="Botanical name"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Category</label><select id="admin-category"><option>Vegetable</option><option>Legume</option><option>Herb</option><option>Flower</option><option>Gourd</option><option>Fruit</option><option>Greens</option><option>Root</option><option>Other</option></select></div>
+              <div class="form-group"><label>Status</label><select id="admin-status"><option value="have">✅ Available for swap</option><option value="seeking">🔍 Seeking / Sourcing</option><option value="growing">🌱 Growing next season</option></select></div>
+            </div>
+            <div class="form-group"><label>Notes (optional)</label><input type="text" id="admin-notes" placeholder="Harvest date, variety notes…"></div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+              <button class="btn-primary" onclick="adminAddSeed(false)" style="flex:1;padding:0.75rem;">🌱 Add</button>
+              <button class="btn-primary" onclick="adminAddSeed(true)" style="flex:1;padding:0.75rem;background:var(--leaf);">📧 Add &amp; Notify Members</button>
+            </div>
+          </div>
+          <div class="panel-box">
+            <h2>👥 Manage Members</h2>
+            <p style="font-size:0.82rem;color:var(--faded);margin-bottom:1rem;">Approved members can log in with their email to add seeds. WA residents only.</p>
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;flex-wrap:wrap;">
+              <input type="text" id="new-member-name" placeholder="Full name" class="ii" style="flex:1;min-width:90px;">
+              <input type="email" id="new-member-email" placeholder="email@address.com" class="ii" style="flex:2;min-width:140px;">
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+              <input type="text" id="new-member-loc" placeholder="Location (WA)" class="ii" style="flex:1;">
+              <input type="text" id="new-member-pin" placeholder="PIN (4 digits)" maxlength="4" class="ii" style="width:110px;flex-shrink:0;letter-spacing:0.2em;">
+              <button class="btn-primary" onclick="addMember()" style="padding:0.6rem 1rem;white-space:nowrap;flex-shrink:0;">+ Add</button>
+            </div>
+            <div id="member-list" style="display:flex;flex-direction:column;gap:0.5rem;max-height:240px;overflow-y:auto;"><p style="color:var(--faded);font-style:italic;font-size:0.85rem;">Loading members…</p></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-header" style="margin-bottom:1rem;"><h2 style="font-size:1.2rem;">All Added Seeds</h2><span class="count-pill" id="admin-added-count">0</span></div>
+          <p style="font-size:0.82rem;color:var(--faded);margin-bottom:1rem;">Seeds added by all members via this form. Click 🗑 to remove.</p>
+          <div id="admin-added-list" style="display:flex;flex-direction:column;gap:0.6rem;"><p style="color:var(--faded);font-style:italic;font-size:0.85rem;">Loading…</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PIN MODAL -->
+<div class="modal-overlay" id="pin-modal">
+  <div class="modal" style="max-width:360px;">
+    <button class="close-modal" onclick="closePinModal()">×</button>
+    <h3>🔑 Change Member PIN</h3>
+    <p class="for-seed" id="pin-modal-member"></p>
+    <label>New 4-Digit PIN *</label>
+    <input type="text" id="pin-modal-input" placeholder="e.g. 4821" maxlength="4" style="letter-spacing:0.3em;font-size:1.2rem;text-align:center;" onkeydown="if(event.key==='Enter')saveMemberPin()">
+    <p id="pin-modal-error" style="color:#c06060;font-size:0.82rem;margin-top:0.6rem;display:none;"></p>
+    <div class="modal-actions" style="margin-top:1rem;">
+      <button class="btn-cancel" onclick="closePinModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveMemberPin()">Save PIN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="admin-login-modal">
+  <div class="modal" style="max-width:360px;">
+    <button class="close-modal" onclick="closeAdminModal()">×</button>
+    <h3>⚙️ Admin Login</h3>
+    <p style="font-size:0.83rem;color:var(--faded);margin-bottom:1.2rem;">Log in to manage the seed collection.</p>
+    <label>Admin Password</label>
+    <input type="password" id="admin-modal-password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminModalLogin()">
+    <p id="admin-modal-error" style="color:#c06060;font-size:0.82rem;margin-top:0.6rem;display:none;"></p>
+    <div class="modal-actions" style="margin-top:1rem;">
+      <button class="btn-cancel" onclick="closeAdminModal()">Cancel</button>
+      <button class="btn-primary" id="admin-modal-btn" onclick="adminModalLogin()">Log In</button>
+    </div>
+    <div id="admin-modal-success" style="display:none;text-align:center;padding:0.5rem 0;">
+      <p style="color:var(--moss);font-weight:700;font-size:0.9rem;">✅ Logged in as <span id="admin-modal-name"></span></p>
+      <p style="font-size:0.8rem;color:var(--faded);margin-top:0.3rem;">🚫 / ↩️ buttons are now visible on seeds.</p>
+      <button class="btn-cancel" onclick="adminModalLogout()" style="margin-top:0.8rem;width:100%;">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- SWAP MODAL -->
+<div class="modal-overlay" id="swap-modal">
+  <div class="modal">
+    <button class="close-modal" onclick="closeModal()">×</button>
+    <h3>Request a Seed Swap</h3>
+    <p class="for-seed" id="modal-seed-name"></p>
+    <label>Your Name *</label><input type="text" id="modal-name" placeholder="Your name">
+    <label>Your Email *</label><input type="email" id="modal-email" placeholder="your@email.com">
+    <label>Your Location (WA only)</label><input type="text" id="modal-location" placeholder="e.g. Wundowie, Sawyers Valley, Chidlow…">
+    <label>What can you offer in return?</label><input type="text" id="modal-offer" placeholder="Seeds you'd like to swap, or 'happy to donate'">
+    <label>Message (optional)</label><textarea id="modal-message" placeholder="Any other details…"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitSwap()">Send Request 🌿</button>
+    </div>
+    <div class="modal-disclaimer">⚠️ <strong>WA Only:</strong> Seed exchange is restricted to Western Australia only, in compliance with WA biosecurity regulations. We cannot send seeds interstate or internationally.</div>
+  </div>
+</div>
+
+<!-- EDIT SEED MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="close-modal" onclick="closeEditModal()">×</button>
+    <h3>✏️ Edit Seed</h3>
+    <p class="for-seed" id="edit-modal-seedname"></p>
+    <input type="hidden" id="edit-seed-id">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div>
+        <label>Seed Name *</label>
+        <input type="text" id="edit-name" placeholder="Common name">
+      </div>
+      <div>
+        <label>Latin Name</label>
+        <input type="text" id="edit-latin" placeholder="Botanical name">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+      <div>
+        <label>Category</label>
+        <select id="edit-category" style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid #d8cebc;border-radius:6px;background:white;font-family:'Lato',sans-serif;font-size:0.9rem;color:var(--soil);outline:none;">
+          <option>Vegetable</option><option>Legume</option><option>Herb</option>
+          <option>Flower</option><option>Gourd</option><option>Fruit</option>
+          <option>Greens</option><option>Root</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Status</label>
+        <select id="edit-status" style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid #d8cebc;border-radius:6px;background:white;font-family:'Lato',sans-serif;font-size:0.9rem;color:var(--soil);outline:none;">
+          <option value="have">✅ Available for swap</option>
+          <option value="seeking">🔍 Seeking / Sourcing</option>
+          <option value="growing">🌱 Growing next season</option>
+        </select>
+      </div>
+    </div>
+    <label>Last Collected / Date</label>
+    <input type="text" id="edit-date" placeholder="e.g. Apr 2026">
+    <label>Notes (optional)</label>
+    <input type="text" id="edit-notes" placeholder="Variety notes, harvest details…">
+    <p id="edit-modal-error" style="color:#c06060;font-size:0.82rem;margin-top:0.6rem;display:none;"></p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <p>© Starry Acres Seed Library · Wundowie, Eastern Perth Hills, WA</p>
+  <p style="margin-top:0.5rem;"><a href="https://starryacres.com.au" target="_blank">starryacres.com.au</a> · <a href="https://www.facebook.com/starryacres.wa" target="_blank">Facebook</a> · <a href="https://www.instagram.com/starryacreswa" target="_blank">Instagram</a> · <a href="https://www.tiktok.com/@starryacres" target="_blank">TikTok</a> · <a href="https://www.youtube.com/@StarryAcresWA" target="_blank">YouTube</a></p>
+  <p style="margin-top:0.75rem;font-size:0.73rem;color:#8a7a6a;border-top:1px solid #5a4a3a;padding-top:0.75rem;">⚠️ Seed postage and exchange is restricted to Western Australia only, in compliance with WA biosecurity laws. We do not send seeds interstate or internationally.</p>
+  <p style="margin-top:0.75rem;font-size:0.72rem;"><a href="#" onclick="openAdminModal();return false;" style="color:var(--faded);text-decoration:none;opacity:0.6;">⚙️ Admin</a></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const SUPA_URL = 'https://afisydaldtimqhsnklxc.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaXN5ZGFsZHRpbXFoc25rbHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1Mzc1NDUsImV4cCI6MjA4ODExMzU0NX0.h11PTMnVHG-8gZQSSfGLa0uBX_ugxAK6bH4BfaK6Dcs';
+
+async function sb(path, opts={}) {
+  const r = await fetch(SUPA_URL+'/rest/v1/'+path, {
+    ...opts,
+    headers: {
+      'apikey': SUPA_KEY, 'Authorization': 'Bearer '+SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer||'return=representation',
+      ...(opts.headers||{})
+    }
+  });
+  if (!r.ok) throw new Error(await r.text());
+  const t = await r.text(); return t ? JSON.parse(t) : [];
+}
+
+// ── SEED DATA ─────────────────────────────────────────────────────────────────
+const seedsData = [
+  {id:1,  name:"Long Red Florence Onion",             latin:"Allium cepa",                          date:"Nov 2024", status:"have",    category:"Vegetable"},
+  {id:2,  name:"Broad Bean (Black & White Flower)",   latin:"Vicia faba 'Aguadulce'",               date:"Nov 2024", status:"have",    category:"Legume"},
+  {id:3,  name:"Calendula — Orange Flower",           latin:"Calendula officinalis",                date:"Nov 2024", status:"have",    category:"Flower"},
+  {id:4,  name:"Watermelon 'Sugar Baby'",             latin:"Citrullus lanatus",                    date:"Jan 2024", status:"have",    category:"Gourd"},
+  {id:5,  name:"Pumpkin J.A.P / Kent",                latin:"Cucurbita moschata",                   date:"Jun 2024", status:"have",    category:"Gourd"},
+  {id:6,  name:"Pea 'Greenfeast'",                    latin:"Pisum sativum",                        date:"Nov 2024", status:"have",    category:"Legume"},
+  {id:7,  name:"Snow Pea — Yakumo Giant",             latin:"Pisum sativum",                        date:"Oct 2024", status:"have",    category:"Legume"},
+  {id:8,  name:"Shungiku (Chrysanthemum Greens)",     latin:"Glebionis coronaria",                  date:"Nov 2024", status:"have",    category:"Greens"},
+  {id:9,  name:"Pigeon Pea — Toor Dal",               latin:"Cajanus cajan",                        date:"Feb 2025", status:"have",    category:"Legume"},
+  {id:10, name:"Bitter Gourd (Green)",                latin:"Momordica charantia",                  date:"Apr 2025", status:"have",    category:"Gourd"},
+  {id:11, name:"Bitter Gourd (White)",                latin:"Momordica charantia",                  date:"Apr 2025", status:"have",    category:"Gourd"},
+  {id:12, name:"Tromboncino Squash",                  latin:"Cucurbita moschata",                   date:"Mar 2025", status:"have",    category:"Gourd"},
+  {id:13, name:"Snake Bean (Green Pod)",              latin:"Vigna unguiculata subsp.",             date:"Mar 2025", status:"have",    category:"Legume"},
+  {id:14, name:"Snake Bean (Red/Purple Pod)",         latin:"Vigna unguiculata",                    date:"Apr 2025", status:"have",    category:"Legume"},
+  {id:15, name:"Spigariello (Leaf Broccoli)",         latin:"Brassica oleracea",                    date:"Apr 2025", status:"have",    category:"Vegetable"},
+  {id:16, name:"Rosella",                             latin:"Hibiscus sabdariffa",                  date:"Jun 2025", status:"have",    category:"Flower"},
+  {id:17, name:"Red 'Burgundy' Okra",                 latin:"Abelmoschus esculentus",               date:"Jun 2025", status:"have",    category:"Vegetable"},
+  {id:18, name:"Lablab / Hyacinth Bean",              latin:"Lablab purpureus",                     date:"Jun 2025", status:"have",    category:"Legume"},
+  {id:19, name:"Strawberry Guava",                    latin:"Psidium cattleyanum",                  date:"Mar 2025", status:"have",    category:"Fruit"},
+  {id:20, name:"India Guava — White Fleshed",         latin:"Psidium guajava",                      date:"May 2025", status:"have",    category:"Fruit"},
+  {id:21, name:"Pink Guava",                          latin:"Psidium guajava",                      date:"May 2025", status:"have",    category:"Fruit"},
+  {id:22, name:"Garlic Chives",                       latin:"Allium tuberosum",                     date:"May 2025", status:"have",    category:"Herb"},
+  {id:23, name:"Piel de Sapo / Christmas Melon",      latin:"Cucumis melo",                         date:"Jun 2025", status:"have",    category:"Gourd"},
+  {id:24, name:"Warrigal Greens / NZ Spinach",        latin:"Tetragonia tetragonioides",            date:"Jun 2025", status:"have",    category:"Greens"},
+  {id:25, name:"Sweet Basil",                         latin:"Ocimum basilicum",                     date:"Jul 2025", status:"have",    category:"Herb"},
+  {id:26, name:"Luffa / Loofah",                      latin:"Luffa cylindrica",                     date:"Jul 2025", status:"have",    category:"Gourd"},
+  {id:27, name:"Chilacayote / Shark Fin Melon",       latin:"Cucurbita ficifolia",                  date:"Aug 2025", status:"have",    category:"Gourd"},
+  {id:28, name:"Wendy's Purple Flowered Climbing Pea",latin:"Pisum sativum",                        date:"Oct 2025", status:"have",    category:"Legume"},
+  {id:29, name:"Purple Podded Snow Pea",              latin:"Pisum sativum",                        date:"Oct 2025", status:"have",    category:"Legume"},
+  {id:30, name:"Chinese Pink Snow Pea",               latin:"Pisum sativum var. macrocarpon",       date:"Oct 2025", status:"have",    category:"Legume"},
+  {id:31, name:"Dill",                                latin:"Anethum graveolens",                   date:"Nov 2025", status:"have",    category:"Herb"},
+  {id:32, name:"Mustard Green",                       latin:"Brassica juncea",                      date:"Nov 2025", status:"have",    category:"Greens"},
+  {id:33, name:"Red Giant Mustard",                   latin:"Brassica juncea (Giant Red)",          date:"Nov 2025", status:"have",    category:"Greens"},
+  {id:34, name:"Daikon Radish",                       latin:"Raphanus sativus var. longipinnatus",  date:"Nov 2025", status:"have",    category:"Root"},
+  {id:35, name:"Icicle Radish",                       latin:"Raphanus sativus",                     date:"Nov 2025", status:"have",    category:"Root"},
+  {id:36, name:"Waltham Broccoli",                    latin:"Brassica oleracea",                    date:"Nov 2025", status:"have",    category:"Vegetable"},
+  {id:37, name:"Coriander",                           latin:"Coriandrum sativum",                   date:"Nov 2025", status:"have",    category:"Herb"},
+  {id:38, name:"Kale 'Bear Necessities'",             latin:"Brassica napus",                       date:"Nov 2025", status:"have",    category:"Greens"},
+  {id:39, name:"Rocket (Arugula)",                    latin:"Eruca sativa",                         date:"Nov 2025", status:"have",    category:"Greens"},
+  {id:40, name:"Pêche de Vigne / Black Boy Peach",    latin:"Prunus persica",                       date:"—",        status:"have",    category:"Fruit"},
+  {id:41, name:"Speckled Lettuce 'Freckles'",         latin:"Lactuca sativa",                       date:"Jan 2026", status:"have",    category:"Vegetable"},
+  {id:42, name:"Celtuce (Asparagus Lettuce)",         latin:"Lactuca sativa var. augustana",        date:"Jan 2026", status:"have",    category:"Vegetable"},
+  {id:43, name:"Rockmelon 'Petit Gris De Rennes'",    latin:"Cucumis melo",                         date:"Feb 2026", status:"have",    category:"Gourd"},
+  {id:44, name:"Nantes Carrot — Cosmic Purple",       latin:"Daucus carota",                        date:"—",        status:"have",    category:"Root"},
+  {id:45, name:"Pumpkin Bei Bei / Chestnut",          latin:"Cucurbita",                            date:"",         status:"seeking", category:"Gourd"},
+  {id:46, name:"Perilla 'Green Shiso'",               latin:"Perilla frutescens 'Green'",           date:"",         status:"seeking", category:"Herb"},
+  {id:47, name:"Perilla 'Purple Shiso'",              latin:"Perilla frutescens 'Purple'",          date:"",         status:"seeking", category:"Herb"},
+  {id:48, name:"Cosmos sulphureus Dwarf Mix",         latin:"Cosmos sulphureus",                    date:"Jan 2026", status:"growing", category:"Flower"},
+  {id:49, name:"Squash Red Kuri",                     latin:"Cucurbita maxima",                     date:"Jan 2026", status:"growing", category:"Gourd"},
+  {id:50, name:"Gourd Birdhouse",                     latin:"Lagenaria siceraria",                  date:"Jan 2026", status:"growing", category:"Gourd"},
+  {id:51, name:"Cabbage Golden Acre",                 latin:"Brassica oleracea",                    date:"Jan 2026", status:"growing", category:"Vegetable"},
+];
+
+let communitySeeds = [...seedsData];
+let swapRequests = [];
+let currentSeedForSwap = null;
+let activeCategory = 'all';
+let currentUser = null;
+let nextId = 100;
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function catColor(c) {
+  const m = {Legume:'#e8f3df',Gourd:'#fef6e0',Herb:'#e8f6f0',Flower:'#fde8f0',
+             Vegetable:'#e8f0fe',Fruit:'#fde8e8',Greens:'#eef5e6',Root:'#f5ece0'};
+  return m[c] || '#f0f0f0';
+}
+
+function renderSeeds(gridId, seeds) {
+  const g = document.getElementById(gridId); g.innerHTML = '';
+  if (!seeds.length) {
+    g.innerHTML = '<p style="color:var(--faded);font-style:italic;font-size:0.9rem;grid-column:1/-1">No seeds found.</p>';
+    return;
+  }
+  seeds.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'seed-card' + (s.unavailable ? ' unavailable' : '');
+    card.style.cssText = 'animation-delay:' + (i*0.03) + 's;background:' + catColor(s.category);
+    const sl = s.unavailable ? 'Unavailable' : s.status==='have' ? 'Available' : s.status==='seeking' ? 'Seeking' : 'Growing Next';
+    const sc = s.unavailable ? 'status-unavailable' : s.status==='have' ? 'status-have' : s.status==='seeking' ? 'status-seeking' : 'status-growing';
+    const isCol = gridId === 'collection-grid';
+    const isAdmin = currentUser?.type === 'admin';
+    const adminEdit = isAdmin ? `<button class="edit-btn" title="Edit seed" onclick="openEditModal(${s.id})">✏️</button>` : '';
+    const unavailBtn = isCol && isAdmin ? `<button class="unavail-btn" title="${s.unavailable?'Restore':'Mark unavailable'}" onclick="toggleUnavail(${s.id})">${s.unavailable?'↩️':'🚫'}</button>` : '';
+    card.innerHTML = `
+      <div class="seed-category">${s.category}</div>
+      <div class="seed-name">${s.name}</div>
+      <div class="seed-latin">${s.latin||''}</div>
+      <div class="seed-meta">
+        <span class="seed-date">${s.date||''}</span>
+        <span class="status-badge ${sc}">${sl}</span>
+      </div>
+      ${s.status!=='growing'
+        ? `<div class="card-actions">
+            ${!s.unavailable
+              ? `<button class="swap-btn" onclick="openSwapModal(${s.id})">${s.status==='seeking'?'I Have This! 🌿':'Request Swap 🤝'}</button>`
+              : `<button class="swap-btn" style="background:#888;cursor:default" disabled>Unavailable</button>`}
+            ${unavailBtn}${adminEdit}
+          </div>`
+        : (adminEdit ? `<div class="card-actions" style="margin-top:0.75rem;justify-content:flex-end;">${adminEdit}</div>` : '')
+      }`;
+    g.appendChild(card);
+  });
+}
+
+function renderAll() {
+  const have = communitySeeds.filter(s=>s.status==='have');
+  const seek = communitySeeds.filter(s=>s.status==='seeking');
+  const grow = communitySeeds.filter(s=>s.status==='growing');
+  document.getElementById('seeking-count').textContent = seek.length;
+  document.getElementById('growing-count').textContent = grow.length;
+  filterSeeds();
+  renderSeeds('seeking-grid', seek);
+  renderSeeds('growing-grid', grow);
+  renderRequests();
+  renderCommunity();
+}
+
+function filterSeeds() {
+  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
+  let seeds = communitySeeds.filter(s=>s.status==='have');
+  if (activeCategory !== 'all') seeds = seeds.filter(s=>s.category===activeCategory);
+  if (q) seeds = seeds.filter(s=>s.name.toLowerCase().includes(q)||(s.latin||'').toLowerCase().includes(q));
+  renderSeeds('collection-grid', seeds);
+  document.getElementById('collection-count').textContent = seeds.length;
+}
+
+function filterCat(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterSeeds();
+}
+
+async function toggleUnavail(id) {
+  const s = communitySeeds.find(x=>x.id===id);
+  if (!s) return;
+  const newVal = !s.unavailable;
+  s.unavailable = newVal;
+  filterSeeds();
+  showToast(newVal ? '🚫 Marked as unavailable' : '↩️ Restored as available');
+  try {
+    if (s.db_id) {
+      // DB seed — patch user_seeds directly
+      await sb('user_seeds?id=eq.'+s.db_id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({unavailable: newVal})
+      });
+    } else {
+      // Base/hardcoded seed — upsert into seed_overrides
+      await sb('seed_overrides', {
+        method: 'POST',
+        prefer: 'resolution=merge-duplicates,return=minimal',
+        body: JSON.stringify({seed_id: String(s.id), unavailable: newVal})
+      });
+    }
+  } catch(e) { console.warn('Could not persist unavailability:', e); }
+}
+
+function renderRequests() {
+  const isAdmin = currentUser?.type === 'admin';
+  document.getElementById('requests-admin-gate').classList.toggle('hidden', isAdmin);
+  document.getElementById('requests-content').classList.toggle('hidden', !isAdmin);
+  document.getElementById('requests-count').textContent = isAdmin ? swapRequests.length : '🔒';
+  if (!isAdmin) return;
+  const list = document.getElementById('requests-list');
+  if (!swapRequests.length) {
+    list.innerHTML = '<p style="color:var(--faded);font-style:italic;font-size:0.9rem;">No pending swap requests.</p>';
+    return;
+  }
+  list.innerHTML = swapRequests.map((r,i) => `
+    <div class="request-card">
+      <div class="request-icon">🌱</div>
+      <div class="request-details">
+        <h4>${r.seedName}</h4>
+        <p>From <strong>${r.name}</strong>${r.location?' · '+r.location:''}</p>
+        ${r.email?`<p>✉️ ${r.email}</p>`:''}
+        ${r.offer?`<p>Offering: ${r.offer}</p>`:''}
+        ${r.message?`<p style="margin-top:0.3rem;font-style:italic;">"${r.message}"</p>`:''}
+      </div>
+      <div class="request-actions">
+        <button class="btn-sm btn-accept" onclick="acceptReq(${i})">Accept</button>
+        <button class="btn-sm btn-decline" onclick="declineReq(${i})">Decline</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderCommunity() {
+  const grid = document.getElementById('community-grid');
+  const added = communitySeeds.filter(s=>s.userAdded);
+  const userG = {};
+  added.forEach(s=>{
+    const k = s.grower||'Community Member';
+    if (!userG[k]) userG[k]={name:k,location:s.growerLoc||'',seeds:0,initials:k.substring(0,2).toUpperCase()};
+    userG[k].seeds++;
+  });
+  const base = [
+    {name:"Starry Acres Seed Library",location:"Wundowie, Eastern Perth Hills, WA",seeds:communitySeeds.length,initials:"SA"},
+    {name:"Wundowie Gardener",location:"Wundowie, Eastern Perth Hills, WA",seeds:seedsData.length,initials:"WG"},
+  ];
+  const all = [...base, ...Object.values(userG)];
+  grid.innerHTML = all.map(g=>`
+    <div class="grower-card">
+      <div class="grower-avatar">${g.initials}</div>
+      <div class="grower-name">${g.name}</div>
+      <div class="grower-location">📍 ${g.location}</div>
+      <div class="grower-stats"><strong>${g.seeds||0}</strong> seeds shared</div>
+    </div>`).join('');
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.querySelectorAll('.container > div[id^="tab-"]').forEach(el=>el.classList.add('hidden'));
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  document.querySelectorAll('.tab-bar button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── SWAP MODAL ────────────────────────────────────────────────────────────────
+function openSwapModal(id) {
+  currentSeedForSwap = communitySeeds.find(s=>s.id===id);
+  document.getElementById('modal-seed-name').textContent =
+    currentSeedForSwap.status==='seeking' ? 'I have: '+currentSeedForSwap.name : 'Requesting: '+currentSeedForSwap.name;
+  ['modal-name','modal-email','modal-location','modal-offer','modal-message'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('swap-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('swap-modal').classList.remove('open'); }
+
+async function submitSwap() {
+  const name = document.getElementById('modal-name').value.trim();
+  const email = document.getElementById('modal-email').value.trim();
+  if (!name||!email) { showToast('Please enter your name and email.'); return; }
+  const req = {
+    seedName: currentSeedForSwap.name, seedId: currentSeedForSwap.id,
+    name, email,
+    location: document.getElementById('modal-location').value.trim(),
+    offer: document.getElementById('modal-offer').value.trim(),
+    message: document.getElementById('modal-message').value.trim()
+  };
+  const btn = document.querySelector('#swap-modal .btn-primary');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  try {
+    // Save to Supabase
+    await sb('swap_requests', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({
+        seed_name: req.seedName, seed_id: req.seedId,
+        name: req.name, email: req.email,
+        location: req.location, offer: req.offer,
+        message: req.message, status: 'pending'
+      })
+    });
+  } catch(e) { console.warn('Could not save swap request to DB:', e); }
+  try {
+    // Send email notification
+    await fetch('https://formspree.io/f/mgoljrdb', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        _subject: '🌱 Seed Swap Request: '+req.seedName, _replyto: email,
+        'Seed': req.seedName, 'Name': name, 'Email': email,
+        'Location': req.location||'(not given)',
+        'Offering': req.offer||'(not given)',
+        'Message': req.message||'(none)'
+      })
+    });
+  } catch(e) { console.warn('Email send failed', e); }
+  btn.textContent = 'Send Request 🌿'; btn.disabled = false;
+  swapRequests.push(req); closeModal(); renderRequests();
+  showToast('🌿 Swap request sent! Starry Acres has been notified by email.');
+}
+
+async function loadSwapRequests() {
+  try {
+    const rows = await sb('swap_requests?status=eq.pending&select=*&order=created_at.asc');
+    swapRequests = rows.map(r => ({
+      db_id: r.id, seedName: r.seed_name, seedId: r.seed_id,
+      name: r.name, email: r.email, location: r.location||'',
+      offer: r.offer||'', message: r.message||''
+    }));
+  } catch(e) { console.warn('Could not load swap requests:', e); }
+}
+
+async function acceptReq(i) {
+  const r = swapRequests[i];
+  try {
+    if (r.db_id) await sb('swap_requests?id=eq.'+r.db_id, {method:'PATCH', prefer:'return=minimal', body:JSON.stringify({status:'accepted'})});
+  } catch(e) {}
+  swapRequests.splice(i, 1); renderRequests();
+  showToast('✅ Accepted swap with ' + r.name);
+}
+
+async function declineReq(i) {
+  const r = swapRequests[i];
+  try {
+    if (r.db_id) await sb('swap_requests?id=eq.'+r.db_id, {method:'PATCH', prefer:'return=minimal', body:JSON.stringify({status:'declined'})});
+  } catch(e) {}
+  swapRequests.splice(i, 1); renderRequests();
+  showToast('Swap request declined.');
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function memberLogin() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pin = document.getElementById('login-pin').value.trim();
+  if (!email) { showLoginError('Please enter your email address.'); return; }
+  if (!pin) { showLoginError('Please enter your 4-digit PIN.'); return; }
+  setLoginBusy(true);
+  try {
+    const rows = await sb('members?email=eq.'+encodeURIComponent(email)+'&select=email,name,location,pin');
+    if (!rows.length) {
+      showLoginError('This email is not on the approved member list. Please contact Starry Acres to be added.');
+      return;
+    }
+    if (rows[0].pin && rows[0].pin !== pin) {
+      showLoginError('Incorrect PIN. Please try again or contact Starry Acres.');
+      return;
+    }
+    currentUser = {type:'member', email:rows[0].email, name:rows[0].name, location:rows[0].location||''};
+    document.getElementById('member-name-display').textContent = rows[0].name;
+    showPanel('member');
+    await renderAddedSeeds('member');
+  } catch(e) { showLoginError('Login failed — please check your connection and try again.'); }
+  finally { setLoginBusy(false); }
+}
+
+async function adminLogin() {
+  const pw = document.getElementById('login-password').value;
+  setLoginBusy(true);
+  try {
+    let adminName = null;
+    try {
+      const rows = await sb('admins?select=name,password');
+      const match = rows.find(r => r.password === pw);
+      if (match) adminName = match.name;
+    } catch(e) {
+      // admins table not set up yet, fall back to admin_config
+      try {
+        const rows = await sb('admin_config?key=eq.admin_password&select=value');
+        if (rows.length && pw === rows[0].value) adminName = 'Starry Acres Admin';
+      } catch(e2) {
+        if (pw === 'StarryAcres2025!') adminName = 'Starry Acres Admin';
+      }
+    }
+    if (!adminName) { showLoginError('Incorrect admin password.'); return; }
+    currentUser = {type:'admin', name: adminName};
+    showPanel('admin');
+    await renderMemberList();
+    await renderAddedSeeds('admin');
+  } catch(e) { showLoginError('Login failed — please check your connection and try again.'); }
+  finally { setLoginBusy(false); }
+}
+
+function setLoginBusy(on) {
+  document.querySelectorAll('#add-login-gate .btn-primary').forEach(b=>{
+    b.disabled = on;
+    if (on) { b._t = b.textContent; b.textContent = 'Checking…'; }
+    else if (b._t) b.textContent = b._t;
+  });
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = '❌ ' + msg; el.style.display = 'block';
+}
+
+function showPanel(type) {
+  ['add-login-gate','add-member-panel','add-admin-panel'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById(type==='admin'?'add-admin-panel':'add-member-panel').classList.remove('hidden');
+  filterSeeds(); // re-render collection so admin buttons appear/disappear
+}
+
+function logout() {
+  currentUser = null;
+  ['add-member-panel','add-admin-panel'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('add-login-gate').classList.remove('hidden');
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  filterSeeds(); // re-render collection so admin buttons disappear
+}
+
+// ── MEMBER MANAGEMENT ─────────────────────────────────────────────────────────
+async function addMember() {
+  const name = document.getElementById('new-member-name').value.trim();
+  const email = document.getElementById('new-member-email').value.trim().toLowerCase();
+  const loc = document.getElementById('new-member-loc').value.trim();
+  const pin = document.getElementById('new-member-pin').value.trim();
+  if (!name || !email) { showToast('Please enter a name and email.'); return; }
+  if (!pin || !/^\d{4}$/.test(pin)) { showToast('Please enter a 4-digit numeric PIN.'); return; }
+  try {
+    await sb('members', {method:'POST', prefer:'return=minimal', body:JSON.stringify({name, email, location:loc, pin})});
+    ['new-member-name','new-member-email','new-member-loc','new-member-pin'].forEach(id=>document.getElementById(id).value='');
+    await renderMemberList();
+    showToast('✅ '+name+' added as an approved member (PIN: '+pin+').');
+  } catch(e) { showToast('Could not add member — they may already exist.'); }
+}
+
+async function removeMember(email) {
+  if (!confirm('Remove '+email+' from approved members?')) return;
+  try {
+    await sb('members?email=eq.'+encodeURIComponent(email), {method:'DELETE',prefer:'return=minimal'});
+    await renderMemberList(); showToast('Member removed.');
+  } catch(e) { showToast('Could not remove member.'); }
+}
+
+async function renderMemberList() {
+  const list = document.getElementById('member-list'); if (!list) return;
+  list.innerHTML = '<p style="color:var(--faded);font-size:0.82rem;">Loading…</p>';
+  try {
+    const members = await sb('members?select=email,name,location,pin&order=name.asc');
+    if (!members.length) { list.innerHTML='<p style="color:var(--faded);font-style:italic;font-size:0.85rem;">No members yet. Add emails above.</p>'; return; }
+    list.innerHTML = members.map(m=>`
+      <div class="seed-row">
+        <div class="info"><strong>${m.name}</strong><span>${m.email}${m.location?' — '+m.location:''} · PIN: ${m.pin||'(not set)'}</span></div>
+        <button class="btn-sm btn-decline" onclick="changePinPrompt('${m.email.replace(/'/g,"\\'")}','${m.name.replace(/'/g,"\\'")}')">🔑</button>
+        <button class="del-btn" onclick="removeMember('${m.email.replace(/'/g,"\\'")}')">🗑</button>
+      </div>`).join('');
+  } catch(e) { list.innerHTML='<p style="color:#c06060;font-size:0.82rem;">Could not load members.</p>'; }
+}
+
+// ── MEMBER NOTIFICATIONS ──────────────────────────────────────────────────────
+async function notifyMembers(name, latin, cat, status) {
+  let members = [];
+  try { members = await sb('members?select=email,name'); } catch(e) {}
+  if (!members.length) { showToast('No members to notify yet.'); return; }
+  const sl = {have:'now available for swap',seeking:'being sourced',growing:'being grown for next season'}[status]||status;
+  try {
+    await fetch('https://formspree.io/f/mgoljrdb', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        _subject: '🌱 New Seed: '+name+' — Starry Acres Seed Library',
+        _replyto: 'starryacreswa@gmail.com',
+        'Type': 'Member Notification',
+        'New Seed': name+(latin?' ('+latin+')':''),
+        'Category': cat, 'Status': sl,
+        'Members': members.map(m=>m.name+' <'+m.email+'>').join(', '),
+        'Message': '"'+name+'" is '+sl+' at Starry Acres Seed Library (WA residents only).'
+      })
+    });
+    showToast('📧 Notification sent to '+members.length+' member(s)!');
+  } catch(e) { showToast('Seed added, but notification email failed.'); }
+}
+
+// ── SEED DB ───────────────────────────────────────────────────────────────────
+async function loadDBSeeds() {
+  try {
+    const rows = await sb('user_seeds?select=*&order=created_at.asc');
+    rows.forEach(s=>{
+      communitySeeds.push({
+        id:nextId++, db_id:s.id, name:s.name, latin:s.latin||'',
+        category:s.category, status:s.status, date:s.date||'',
+        notes:s.notes||'', grower:s.grower, growerLoc:s.grower_loc||'',
+        userAdded:true, unavailable: s.unavailable || false
+      });
+    });
+  } catch(e) { console.warn('Could not load seeds from DB:', e); }
+}
+
+async function saveToDB(seed) {
+  try {
+    const rows = await sb('user_seeds', {
+      method:'POST',
+      body: JSON.stringify({name:seed.name,latin:seed.latin,category:seed.category,
+        status:seed.status,date:seed.date,notes:seed.notes,grower:seed.grower,
+        grower_loc:seed.growerLoc,unavailable:false})
+    });
+    if (rows.length) seed.db_id = rows[0].id;
+  } catch(e) { console.warn('Could not save to DB:', e); }
+}
+
+async function deleteFromDB(dbId) {
+  if (!dbId) return;
+  try { await sb('user_seeds?id=eq.'+dbId, {method:'DELETE',prefer:'return=minimal'}); } catch(e) {}
+}
+
+function buildSeed(name, latin, cat, status, notes, grower, loc) {
+  return {id:nextId++, name, latin, category:cat, status, notes, grower, growerLoc:loc,
+    date: new Date().toLocaleDateString('en-AU',{month:'short',year:'numeric'}), userAdded:true};
+}
+
+async function renderAddedSeeds(role) {
+  const listId = role==='admin' ? 'admin-added-list' : 'member-added-list';
+  const countId = role==='admin' ? 'admin-added-count' : 'member-added-count';
+  const list = document.getElementById(listId);
+  const countEl = document.getElementById(countId);
+  if (!list) return;
+  const added = role==='admin'
+    ? communitySeeds.filter(s=>s.userAdded)
+    : communitySeeds.filter(s=>s.userAdded && s.grower===currentUser?.name);
+  if (countEl) countEl.textContent = added.length;
+  const sl = {have:'✅ Available',seeking:'🔍 Seeking',growing:'🌱 Growing'};
+  list.innerHTML = added.length
+    ? added.map(s=>`
+      <div class="seed-row">
+        <div class="info">
+          <strong>${s.name}</strong>
+          <span>${s.category} · ${sl[s.status]||s.status}${s.latin?' · <em>'+s.latin+'</em>':''}${role==='admin'&&s.grower?' · '+s.grower:''}</span>
+        </div>
+        <button class="del-btn" onclick="deleteSeed(${s.id},'${role}')">🗑</button>
+      </div>`).join('')
+    : '<p style="color:var(--faded);font-style:italic;font-size:0.85rem;">No seeds added yet.</p>';
+}
+
+async function deleteSeed(id, role) {
+  const idx = communitySeeds.findIndex(s=>s.id===id);
+  if (idx===-1) return;
+  const seed = communitySeeds[idx];
+  communitySeeds.splice(idx, 1);
+  await deleteFromDB(seed.db_id);
+  renderAll();
+  await renderAddedSeeds(role);
+  showToast('"'+seed.name+'" removed from the collection.');
+}
+
+async function memberAddSeed() {
+  if (!currentUser) return;
+  const name = document.getElementById('add-name').value.trim();
+  if (!name) { showToast('Please enter the seed name.'); return; }
+  const seed = buildSeed(name,
+    document.getElementById('add-latin').value.trim(),
+    document.getElementById('add-category').value,
+    document.getElementById('add-status').value,
+    document.getElementById('add-notes').value.trim(),
+    currentUser.name, currentUser.location||'');
+  communitySeeds.push(seed);
+  await saveToDB(seed);
+  ['add-name','add-latin','add-notes'].forEach(id=>document.getElementById(id).value='');
+  renderAll(); await renderAddedSeeds('member');
+  showToast('🌱 "'+name+'" added to the collection!');
+}
+
+async function adminAddSeed(notify) {
+  const name = document.getElementById('admin-name').value.trim();
+  if (!name) { showToast('Please enter the seed name.'); return; }
+  const latin = document.getElementById('admin-latin').value.trim();
+  const cat = document.getElementById('admin-category').value;
+  const status = document.getElementById('admin-status').value;
+  const seed = buildSeed(name, latin, cat, status,
+    document.getElementById('admin-notes').value.trim(),
+    document.getElementById('admin-grower').value.trim(),
+    document.getElementById('admin-location').value.trim());
+  communitySeeds.push(seed);
+  await saveToDB(seed);
+  ['admin-name','admin-latin','admin-notes'].forEach(id=>document.getElementById(id).value='');
+  renderAll(); await renderAddedSeeds('admin');
+  showToast('🌱 "'+name+'" added!'+(notify?' Sending member notifications…':''));
+  if (notify) await notifyMembers(name, latin, cat, status);
+}
+
+// ── CHANGE MEMBER PIN ─────────────────────────────────────────────────────────
+let pinChangeTarget = null;
+
+function changePinPrompt(email, name) {
+  pinChangeTarget = email;
+  document.getElementById('pin-modal-member').textContent = 'Changing PIN for: ' + name;
+  document.getElementById('pin-modal-input').value = '';
+  document.getElementById('pin-modal-error').style.display = 'none';
+  document.getElementById('pin-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('pin-modal-input').focus(), 100);
+}
+
+function closePinModal() {
+  document.getElementById('pin-modal').classList.remove('open');
+  pinChangeTarget = null;
+}
+
+async function saveMemberPin() {
+  const pin = document.getElementById('pin-modal-input').value.trim();
+  const errEl = document.getElementById('pin-modal-error');
+  if (!/^\d{4}$/.test(pin)) {
+    errEl.textContent = 'Please enter exactly 4 numeric digits.';
+    errEl.style.display = 'block'; return;
+  }
+  try {
+    await sb('members?email=eq.'+encodeURIComponent(pinChangeTarget), {
+      method: 'PATCH', prefer: 'return=minimal',
+      body: JSON.stringify({pin})
+    });
+    closePinModal();
+    await renderMemberList();
+    showToast('🔑 PIN updated successfully.');
+  } catch(e) { errEl.textContent = 'Could not update PIN — check your connection.'; errEl.style.display = 'block'; }
+}
+
+document.getElementById('pin-modal').addEventListener('click', function(e){if(e.target===this)closePinModal();});
+
+// ── ADMIN MODAL ───────────────────────────────────────────────────────────────
+function openAdminModal() {
+  const modal = document.getElementById('admin-login-modal');
+  modal.classList.add('open');
+  // If already logged in as admin, show the success state
+  if (currentUser?.type === 'admin') {
+    document.getElementById('admin-modal-password').style.display = 'none';
+    document.querySelector('#admin-login-modal label').style.display = 'none';
+    document.getElementById('admin-modal-btn').style.display = 'none';
+    document.getElementById('admin-modal-success').style.display = 'block';
+  } else {
+    document.getElementById('admin-modal-password').value = '';
+    document.getElementById('admin-modal-error').style.display = 'none';
+  }
+}
+
+function closeAdminModal() {
+  document.getElementById('admin-login-modal').classList.remove('open');
+  // Reset to login state for next time
+  document.getElementById('admin-modal-password').style.display = '';
+  document.querySelector('#admin-login-modal label').style.display = '';
+  document.getElementById('admin-modal-btn').style.display = '';
+  document.getElementById('admin-modal-success').style.display = 'none';
+}
+
+async function adminModalLogin() {
+  const pw = document.getElementById('admin-modal-password').value;
+  const errEl = document.getElementById('admin-modal-error');
+  const btn = document.getElementById('admin-modal-btn');
+  errEl.style.display = 'none';
+  btn.textContent = 'Checking…'; btn.disabled = true;
+  try {
+    let adminName = null;
+    try {
+      const rows = await sb('admins?select=name,password');
+      const match = rows.find(r => r.password === pw);
+      if (match) adminName = match.name;
+    } catch(e) {
+      // admins table not set up yet, fall back to admin_config
+      try {
+        const rows = await sb('admin_config?key=eq.admin_password&select=value');
+        if (rows.length && pw === rows[0].value) adminName = 'Starry Acres Admin';
+      } catch(e2) {
+        if (pw === 'StarryAcres2025!') adminName = 'Starry Acres Admin';
+      }
+    }
+    if (!adminName) {
+      errEl.textContent = '❌ Incorrect password.'; errEl.style.display = 'block';
+      btn.textContent = 'Log In'; btn.disabled = false;
+      return;
+    }
+    if (!currentUser) currentUser = {type:'admin', name: adminName};
+    document.getElementById('admin-modal-name').textContent = adminName;
+    document.getElementById('admin-modal-password').style.display = 'none';
+    document.querySelector('#admin-login-modal label').style.display = 'none';
+    btn.style.display = 'none';
+    document.getElementById('admin-modal-success').style.display = 'block';
+    filterSeeds();
+    renderRequests(); // show requests tab content if admin is now logged in
+    showToast('⚙️ Logged in as ' + adminName + ' — 🚫 / ↩️ buttons now visible.');
+  } catch(e) {
+    errEl.textContent = '❌ Login failed — check your connection.'; errEl.style.display = 'block';
+    btn.textContent = 'Log In'; btn.disabled = false;
+  }
+}
+
+function adminModalLogout() {
+  currentUser = null;
+  // Also log out the Add Seeds panel if it was open
+  ['add-member-panel','add-admin-panel'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('add-login-gate').classList.remove('hidden');
+  closeAdminModal();
+  filterSeeds();
+  renderRequests(); // re-show the gate on logout
+  showToast('Logged out of admin mode.');
+}
+
+document.getElementById('admin-login-modal').addEventListener('click', function(e){if(e.target===this)closeAdminModal();});
+
+// ── TOAST & INIT ──────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3200);
+}
+
+// ── SEED OVERRIDES (persist base-seed unavailability & edits) ─────────────────
+async function loadSeedOverrides() {
+  try {
+    const rows = await sb('seed_overrides?select=*');
+    rows.forEach(r => {
+      const s = communitySeeds.find(x => x.id === parseInt(r.seed_id));
+      if (!s) return;
+      if (r.unavailable !== null && r.unavailable !== undefined) s.unavailable = r.unavailable;
+      if (r.date)   s.date   = r.date;
+      if (r.status) s.status = r.status;
+      if (r.notes !== null && r.notes !== undefined) s.notes = r.notes;
+    });
+  } catch(e) { console.warn('Could not load seed overrides:', e); }
+}
+
+// ── EDIT SEED MODAL ───────────────────────────────────────────────────────────
+let editTarget = null;
+
+function openEditModal(id) {
+  const s = communitySeeds.find(x => x.id === id);
+  if (!s) return;
+  editTarget = s;
+  document.getElementById('edit-modal-seedname').textContent = 'Editing: ' + s.name;
+  document.getElementById('edit-name').value    = s.name || '';
+  document.getElementById('edit-latin').value   = s.latin || '';
+  document.getElementById('edit-category').value = s.category || 'Vegetable';
+  document.getElementById('edit-status').value  = s.status || 'have';
+  document.getElementById('edit-date').value    = s.date || '';
+  document.getElementById('edit-notes').value   = s.notes || '';
+  document.getElementById('edit-modal-error').style.display = 'none';
+  document.getElementById('edit-modal').classList.add('open');
+  setTimeout(() => document.getElementById('edit-name').focus(), 100);
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+  editTarget = null;
+}
+
+async function saveEdit() {
+  if (!editTarget) return;
+  const name = document.getElementById('edit-name').value.trim();
+  const errEl = document.getElementById('edit-modal-error');
+  if (!name) {
+    errEl.textContent = 'Seed name is required.';
+    errEl.style.display = 'block'; return;
+  }
+  const updates = {
+    name,
+    latin:    document.getElementById('edit-latin').value.trim(),
+    category: document.getElementById('edit-category').value,
+    status:   document.getElementById('edit-status').value,
+    date:     document.getElementById('edit-date').value.trim(),
+    notes:    document.getElementById('edit-notes').value.trim()
+  };
+
+  // Update in-memory immediately
+  Object.assign(editTarget, updates);
+  // Also update seedsData for base seeds so filter/renderAll uses fresh data
+  if (!editTarget.db_id) {
+    const base = seedsData.find(x => x.id === editTarget.id);
+    if (base) Object.assign(base, updates);
+  }
+
+  try {
+    if (editTarget.db_id) {
+      // DB seed → PATCH user_seeds row
+      await sb('user_seeds?id=eq.'+editTarget.db_id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({
+          name: updates.name, latin: updates.latin,
+          category: updates.category, status: updates.status,
+          date: updates.date, notes: updates.notes
+        })
+      });
+    } else {
+      // Base/hardcoded seed → upsert into seed_overrides
+      await sb('seed_overrides', {
+        method: 'POST',
+        prefer: 'resolution=merge-duplicates,return=minimal',
+        body: JSON.stringify({
+          seed_id: String(editTarget.id),
+          date:    updates.date,
+          status:  updates.status,
+          notes:   updates.notes
+        })
+      });
+    }
+  } catch(e) {
+    errEl.textContent = 'Could not save — check your connection.';
+    errEl.style.display = 'block'; return;
+  }
+
+  closeEditModal();
+  renderAll();
+  if (currentUser?.type === 'admin') renderAddedSeeds('admin');
+  showToast('✅ "' + updates.name + '" updated.');
+}
+
+document.getElementById('edit-modal').addEventListener('click', function(e){if(e.target===this)closeEditModal();});
+
+document.getElementById('swap-modal').addEventListener('click', function(e){if(e.target===this)closeModal();});
+(async()=>{ await loadDBSeeds(); await loadSeedOverrides(); await loadSwapRequests(); renderAll(); })();
+</script>
+</body>
+</html>
